@@ -144,6 +144,15 @@ def rate_limit(times: int = None, seconds: int = None):
 app = FastAPI(title="Enterprise Agentic RAG API")
 # app.include_router(health_router)
 
+
+@app.middleware("http")
+async def normalize_slashes(request: Request, call_next):
+    if "//" in request.scope.get("path", ""):
+        import re
+        request.scope["path"] = re.sub(r"/+", "/", request.scope["path"])
+    return await call_next(request)
+
+
 Instrumentator().instrument(app).expose(app, endpoint="/metrics", include_in_schema=False)
 
 

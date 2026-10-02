@@ -86,7 +86,7 @@ if prompt := st.chat_input("Ask about your documentation..."):
             with st.status("🔍 Agent is thinking...", expanded=True) as status:
                 try:
                     with logfire.span("📡 Calling RAG Backend"):
-                        base_url = os.getenv("BACKEND_URL", "http://localhost:8000")
+                        base_url = os.getenv("BACKEND_URL", "http://localhost:8000").rstrip("/")
                         url = f"{base_url}/query"
                         payload = {"q": prompt, "thread_id": st.session_state.session_id}
                         headers = {
